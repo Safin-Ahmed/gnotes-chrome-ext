@@ -1,3 +1,16 @@
-h2 {
-  color: orange;
+body {
+  background-color: antiquewhite;
+}
+h3 {
+  color: #000;
+  font-size: 1.2rem;
+}
+.container {
+  height: auto;
+  margin: auto;
+  text-align: center;
+}
+
+textarea {
+  font-size: 1.2rem;
 }
