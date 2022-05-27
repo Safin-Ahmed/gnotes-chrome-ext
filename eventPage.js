@@ -39,9 +39,9 @@ chrome.contextMenus.onClicked.addListener(function (clickData) {
   }
 });
 
-chrome.storage.onChanged.addListener(function (changes, storageName) {
+chrome.storage.sync.onChanged.addListener(function (changes, storageName) {
   console.log(changes);
   chrome.action.setBadgeText({
-    text: changes.note.newValue.toString(),
+    text: changes.note.newValue.slice(-1).toString(),
   });
 });
