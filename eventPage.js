@@ -1,10 +1,11 @@
-const menuItem = {
-  id: "notedown",
-  title: "Note Down",
-  contexts: ["selection"],
-};
-
-chrome.contextMenus.create(menuItem);
+chrome.runtime.onInstalled.addListener(() => {
+  const menuItem = {
+    id: "notedown",
+    title: "Note Down",
+    contexts: ["selection"],
+  };
+  chrome.contextMenus.create(menuItem);
+});
 
 function convertStr(str) {
   return str.toString();
@@ -17,6 +18,7 @@ chrome.contextMenus.onClicked.addListener(function (clickData) {
       const prevNote = note.note;
       const finalNote = `${prevNote} ${noteText}`;
       chrome.storage.sync.set({ note: finalNote }, () => {
+        console.log("SET!");
         if (noteText && finalNote) {
           let notifOptions = {
             type: "basic",
@@ -24,7 +26,13 @@ chrome.contextMenus.onClicked.addListener(function (clickData) {
             title: "New note added!",
             message: "Your new note has been copied to GNotes",
           };
-          chrome.notifications.create("addNotif", notifOptions);
+          chrome.notifications.create(
+            `addNotif-${Date.now()}`,
+            notifOptions,
+            () => {
+              console.log("Notification", chrome.runtime.lastError);
+            }
+          );
         }
       });
     });
@@ -33,7 +41,7 @@ chrome.contextMenus.onClicked.addListener(function (clickData) {
 
 chrome.storage.onChanged.addListener(function (changes, storageName) {
   console.log(changes);
-  chrome.browserAction.setBadgeText({
-    text: changes.note.newValue.slice(0, -1).toString(),
+  chrome.action.setBadgeText({
+    text: changes.note.newValue.toString(),
   });
 });
